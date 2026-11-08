@@ -1,0 +1,26 @@
+# 从设备上取文件用的临时脚本，不进仓库
+fetch.sh
+
+# 敏感文件：SSH 私钥、VNC 密码、网络配置
+id_ed25519
+id_ed25519.pub
+vnc-pass.txt
+*.vnc
+pwssh.sh
+
+# 二进制产物（体积大 / 对内核版本敏感，留本机）
+*.ko
+*.ko.zst
+*.img
+*.dtb
+*.tar.gz
+
+# 备份
+backups/
+backup/
+
+# 调试抓取物
+*.log
+*.txt
+frames/
+logs/

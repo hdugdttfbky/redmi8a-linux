@@ -1,0 +1,19 @@
+[Unit]
+Description=Mirror landscape X desktop onto the 720x1520 panel (rotated)
+After=xvfb.service
+Requires=xvfb.service
+
+[Service]
+Type=simple
+Environment=MIRROR_DISPLAY=:1
+Environment=MIRROR_FPS=6
+Environment=MIRROR_IDLE_FPS=1.5
+Environment=MIRROR_ROT=cw
+Environment=MIRROR_W=1520
+Environment=MIRROR_H=720
+ExecStart=/usr/bin/python3 -u /usr/local/bin/fbmirror.py
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

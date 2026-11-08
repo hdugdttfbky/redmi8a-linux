@@ -1,0 +1,15 @@
+[Unit]
+Description=Bridge evdev touch/mouse input into the landscape X desktop
+After=xvfb.service
+Requires=xvfb.service
+
+[Service]
+Type=simple
+Environment=TOUCH2X_DISPLAY=:1
+# MIRROR_ROT is picked up from fbmirror.service automatically.
+ExecStart=/usr/bin/python3 -u /usr/local/bin/touch2x.py
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

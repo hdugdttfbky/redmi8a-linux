@@ -1,0 +1,16 @@
+[Unit]
+Description=KTD3137 panel backlight enable (Redmi 8A)
+After=local-fs.target
+Before=multi-user.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+# bl_lm3697 只用来把 PM8953 GPIO4 (HWEN) 拉高，它写 LM3697 寄存器是无效的
+# 但千万不要 rmmod 它：它的 remove 会把 HWEN 拉低，背光立即熄灭
+ExecStartPre=/sbin/modprobe bl_lm3697
+ExecStart=/usr/local/bin/ktd3137-bl 1400
+ExecStop=/usr/local/bin/ktd3137-bl 0
+
+[Install]
+WantedBy=multi-user.target

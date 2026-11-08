@@ -1,0 +1,13 @@
+[Unit]
+Description=Power key short-press = screen on/off (KTD3137 backlight via i2c, never unbinds driver)
+After=multi-user.target ktd3137-backlight.service
+Wants=ktd3137-backlight.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /usr/local/bin/screen-toggle.py --daemon
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

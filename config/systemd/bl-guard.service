@@ -1,0 +1,8 @@
+[Unit]
+Description=KTD3137 backlight guard (auto-rebind chip if externally unbound)
+After=ktd3137-backlight.service
+ConditionPathExists=/dev/i2c-1
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/bl-guard.sh

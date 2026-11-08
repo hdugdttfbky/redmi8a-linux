@@ -1,0 +1,12 @@
+[Unit]
+Description=Auto-rollback DTB if the SPI/touch probe is not confirmed
+After=multi-user.target
+
+[Service]
+Type=oneshot
+TimeoutStartSec=700
+ExecStart=/usr/local/bin/dtb-guard.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

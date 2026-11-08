@@ -1,0 +1,13 @@
+[Unit]
+Description=Unblank the simpledrm framebuffer (keep the LK display pipeline)
+Documentation=man:fbset(1)
+After=ktd3137-backlight.service
+Wants=ktd3137-backlight.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/sh -c 'i=0; while [ $$i -lt 20 ]; do if [ -e /sys/class/graphics/fb0/blank ]; then echo 0 > /sys/class/graphics/fb0/blank; exit 0; fi; i=$$((i+1)); sleep 1; done; echo "fb0 never appeared" >&2; exit 1'
+
+[Install]
+WantedBy=multi-user.target

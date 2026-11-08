@@ -1,0 +1,32 @@
+#!/bin/sh
+# KTD3137 背光工具：ktd3137-bl <0-2047>
+set -e
+# Auto-detect the bus that responds at 0x36 (i2c numbering changes when the
+# 78b7000 QUP block is switched between i2c and spi).
+modprobe i2c-dev 2>/dev/null || true
+BUS=
+for b in 0 1 2 3 4 5; do
+    [ -e /dev/i2c-$b ] || continue
+    if i2cget -y -f $b 0x36 0x00 >/dev/null 2>&1; then BUS=$b; break; fi
+done
+[ -n "$BUS" ] || { echo "KTD3137 not found on any i2c bus"; exit 1; }
+ADDR=0x36
+V=${1:-2047}
+[ "$V" -lt 0 ] && V=0
+[ "$V" -gt 2047 ] && V=2047
+modprobe i2c-dev 2>/dev/null || true
+ls /dev/i2c-$BUS >/dev/null 2>&1 || { echo "no /dev/i2c-$BUS"; exit 1; }
+LSB=$(( V & 7 ))
+MSB=$(( V >> 3 ))
+# 11 位亮度：先写 LSB，再写 MSB
+i2cset -y -f $BUS $ADDR 0x04 $LSB
+i2cset -y -f $BUS $ADDR 0x05 $MSB
+if [ "$V" -eq 0 ]; then
+    # 关背光模式（bit0=0，保留电流设置 10011）
+    i2cset -y -f $BUS $ADDR 0x02 0x98
+else
+    i2cset -y -f $BUS $ADDR 0x02 0x99
+fi
+echo "ktd3137 brightness=$V (lsb=$LSB msb=$MSB)"
+i2cget -y -f $BUS $ADDR 0x02 b >/dev/null 2>&1 && \
+  echo "readback: 0x02=$(i2cget -y -f $BUS $ADDR 0x02 b) 0x04=$(i2cget -y -f $BUS $ADDR 0x04 b) 0x05=$(i2cget -y -f $BUS $ADDR 0x05 b)"

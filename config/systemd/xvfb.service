@@ -1,0 +1,17 @@
+[Unit]
+# Kept the historical unit name on purpose: x11vnc / vnc-session /
+# vnc-terminal / codearts all have Requires=xvfb.service.
+Description=Landscape X server 1520x720 for the panel and VNC
+After=network.target fb-unblank.service
+
+[Service]
+Type=simple
+ExecStartPre=/bin/mkdir -p /run/xvfb
+# -fbdir exposes the framebuffer as /run/xvfb/Xvfb_screen0 (XWD format), so
+# fbmirror.py can mmap it instead of doing a costly XGetImage socket copy.
+ExecStart=/usr/bin/Xvfb :1 -screen 0 1520x720x24 -fbdir /run/xvfb -nolisten tcp -ac +extension RANDR
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
