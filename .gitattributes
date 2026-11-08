@@ -1,0 +1,16 @@
+# 这些脚本直接部署到 Linux 设备上运行，必须是 LF。
+# 否则在 Windows 上 checkout 后 copy 到设备会因 CRLF 报 "bad interpreter"。
+* text=auto eol=lf
+
+*.sh   text eol=lf
+*.py   text eol=lf
+*.c    text eol=lf
+*.service text eol=lf
+*.timer   text eol=lf
+*.md   text eol=lf
+
+*.png  binary
+*.jpg  binary
+*.ko   binary
+*.zst  binary
+*.dtb  binary
